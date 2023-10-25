@@ -1,12 +1,18 @@
+import { APIError } from '@/utils/error'
 import { Request, Response } from 'express'
 import StatusCodes from "http-status-codes"
 
 function login(req: Request, res: Response) {
-  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Not implemented yet!" })
+  throw new APIError("Not implemented yet!", { code: StatusCodes.INTERNAL_SERVER_ERROR })
+}
+
+function getProfile(req: Request, res: Response) {
+  throw new APIError("Not implemented yet!", { code: StatusCodes.INTERNAL_SERVER_ERROR })
 }
 
 const AuthController = {
-  login
+  login,
+  getProfile
 }
 
 export default AuthController

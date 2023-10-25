@@ -1,3 +1,4 @@
-import { run } from '@/index'
+import { bootstrap, run } from '@/index'
 
+bootstrap()
 run()

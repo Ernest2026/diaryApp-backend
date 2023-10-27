@@ -1,4 +1,4 @@
-import { bootstrap, run } from '@/index'
+import { bootstrap, run } from '@/app'
 
 bootstrap()
 run()

@@ -10,4 +10,7 @@ pnpm install
 
 # start server in watch mode
 pnpm dev
+
+# run test
+pnpm run test
 ```

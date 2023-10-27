@@ -6,6 +6,8 @@
         "./src/*"
       ]
     },
+    "types": ["@types/jest"],
+    "resolveJsonModule": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,

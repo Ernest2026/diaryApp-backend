@@ -28,7 +28,7 @@ process.on("beforeExit", async () => {
 
   app.get("/", (_, res) => res.send("Do you like indomie?"));
 
-  app.use('/', AppRouter)
+  app.use('/api/v1/', AppRouter)
 
   app.use((req, res) => {
     res.status(StatusCodes.NOT_FOUND).json({ error: ReasonPhrases.NOT_FOUND })

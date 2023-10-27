@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node ./src/server.ts",
     "dev": "tsx watch -r dotenv/config ./src/server.ts",
-    "postinstall": "prisma generate",
+    "prisma-generate": "prisma generate",
     "test": "jest -u"
   },
   "keywords": [],

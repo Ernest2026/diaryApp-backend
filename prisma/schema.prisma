@@ -11,14 +11,15 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  imageUrl    String
-  email       String   @unique
-  password    String
-  dateCreated DateTime @default(now())
-  entries     Entry[]
-  settings    Setting?
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  imageUrl  String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  entries   Entry[]
+  settings  Setting?
 }
 
 model Entry {

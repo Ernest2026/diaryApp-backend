@@ -5,8 +5,8 @@ import config from '@/config'
 import logger from '@/utils/logger'
 import ErrorHandlerMiddleware from "./middleware/error-handler.middleware"
 import LoggerMiddleware from "./middleware/logger.middleware"
-import { prisma } from './services/database.service'
-import AppRouter from './routers'
+import { prisma } from './utils/database'
+import AppRouter from './modules'
 import morgan from 'morgan'
 import cors from 'cors'
 import { ReasonPhrases, StatusCodes } from "http-status-codes"

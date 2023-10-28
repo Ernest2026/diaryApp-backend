@@ -1,6 +1,6 @@
 import "express-async-errors"
 
-import express from 'express'
+import express, { Express } from 'express'
 import config from '@/config'
 import logger from '@/utils/logger'
 import ErrorHandlerMiddleware from "./middleware/error-handler.middleware"
@@ -11,13 +11,14 @@ import morgan from 'morgan'
 import cors from 'cors'
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
-const app = express()
 
 process.on("beforeExit", async () => {
   await prisma.$disconnect()
 })
 
 export function bootstrap() {
+  const app = express()
+
   app.use(express.urlencoded({ extended: false }))
   app.use(express.json())
 
@@ -32,12 +33,14 @@ export function bootstrap() {
     res.status(StatusCodes.NOT_FOUND).json({ error: ReasonPhrases.NOT_FOUND })
   })
   app.use(ErrorHandlerMiddleware)
+
+  return app
 }
 
-export function run() {
+export function run(app: Express) {
   app.listen(config.server.port, () => {
     logger.info(`Server running on port ${config.server.port}`)
   })
 }
 
-export default app
+export default bootstrap()

@@ -1,4 +1,3 @@
-import { run, bootstrap } from "@/app";
+import app, { run } from "@/app";
 
-bootstrap()
-run()
+run(app)

@@ -2,11 +2,12 @@
   "name": "diary-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/app.ts",
   "scripts": {
-    "start": "node ./src/server.ts",
-    "dev": "tsx watch -r dotenv/config ./src/server.ts",
-    "prisma-generate": "prisma generate",
+    "start": "tsx -r dotenv/config ./src/run.ts",
+    "lint": "tsc",
+    "dev": "tsx watch -r dotenv/config ./src/run.ts",
+    "postinstall": "prisma generate",
     "test": "jest -u"
   },
   "keywords": [],

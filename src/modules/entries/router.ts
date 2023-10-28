@@ -32,3 +32,6 @@ export default Router()
       }
     })
   })
+  .get("/:id", async (req, res) => {
+    req.params.id
+  })

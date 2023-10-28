@@ -2,7 +2,7 @@ import { prisma } from "@/utils/database"
 import TokenService from "@/services/token"
 import { APIError } from "@/utils/error"
 import { NextFunction, Request, Response } from "express"
-import { StatusCodes } from "http-status-codes"
+import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
 async function verify(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization
@@ -27,11 +27,12 @@ async function verify(req: Request, res: Response, next: NextFunction) {
     }
   })
 
-  res.locals.session = {
-    user
-  }
+  if (!user)
+    throw new APIError(ReasonPhrases.UNAUTHORIZED, { code: StatusCodes.UNAUTHORIZED })
 
-  return next(user)
+  res.locals.user = user
+
+  next()
 }
 
 const JWTMiddleware = {

@@ -1,9 +1,11 @@
+import { subject as an } from '@casl/ability'
 import { prisma } from "@/utils/database";
 import { APIError } from "@/utils/error";
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 import { verify } from "@/utils/jwt";
+import userPermissions from "@/utils/user-permissions";
 
 export default Router()
   .post("/", verify(async (req, res, next, user) => {
@@ -43,6 +45,13 @@ export default Router()
     } as const
 
     const entries = await prisma.entry.findMany(query)
+
+    entries.forEach(entry => {
+      const userAbilities = userPermissions(user)
+      if (!userAbilities.can('read', an("Entry", entry)))
+        throw new APIError("You are not allowed to read this entry!", { code: StatusCodes.UNAUTHORIZED })
+    })
+
     const { _count: count } = await prisma.entry.aggregate({
       ...query,
       _count: true
@@ -70,6 +79,10 @@ export default Router()
     if (!entry)
       throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
 
+    const userAbilities = userPermissions(user)
+    if (!userAbilities.can('read', an("Entry", entry)))
+      throw new APIError("You are not allowed to read this entry!", { code: StatusCodes.UNAUTHORIZED })
+
     res.json(entry)
   }))
   .put("/:entryId", verify(async (req, res, next, user) => {
@@ -81,23 +94,45 @@ export default Router()
       text: z.string()
     }).parse(req.body);
 
+    const entry = await prisma.entry.findUnique({
+      where: { id: entryId, userId: user.id }
+    })
+
+    if (!entry)
+      throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
+
+    const userAbilities = userPermissions(user)
+    if (!userAbilities.can('update', an("Entry", entry)))
+      throw new APIError("You are not allowed to update this entry!", { code: StatusCodes.UNAUTHORIZED })
+
     await prisma.entry.update({
       where: { id: entryId, userId: user.id },
       data: payload
     });
 
-    res.status(StatusCodes.OK).json({
+    res.json({
       message: "Entry updated!"
     });
   }))
   .delete("/:entryId", verify(async (req, res, next, user) => {
     const entryId = req.params.entryId;
 
+    const entry = await prisma.entry.findUnique({
+      where: { id: entryId, userId: user.id }
+    })
+
+    if (!entry)
+      throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
+
+    const userAbilities = userPermissions(user)
+    if (!userAbilities.can('delete', an("Entry", entry)))
+      throw new APIError("You are not allowed to update this entry!", { code: StatusCodes.UNAUTHORIZED })
+
     await prisma.entry.delete({
       where: { id: entryId, userId: user.id }
     });
 
-    res.status(StatusCodes.OK).json({
+    res.json({
       message: "Entry deleted!"
     });
   }))

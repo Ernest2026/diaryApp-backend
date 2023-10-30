@@ -105,4 +105,3 @@ dist
 
 # lock files
 yarn.lock
-pnpm-lock.yaml

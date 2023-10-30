@@ -45,8 +45,6 @@ export default Router()
     } as const
 
     const entries = await prisma.entry.findMany(query)
-    console.log(user)
-    console.log(entries)
 
     entries.forEach(entry => {
       const userAbilities = userPermissions(user)
@@ -73,7 +71,6 @@ export default Router()
 
     const entry = await prisma.entry.findUnique({
       where: {
-        userId: user.id,
         id: entryId
       }
     })
@@ -97,7 +94,7 @@ export default Router()
     }).parse(req.body);
 
     const entry = await prisma.entry.findUnique({
-      where: { id: entryId, userId: user.id }
+      where: { id: entryId }
     })
 
     if (!entry)
@@ -120,7 +117,7 @@ export default Router()
     const entryId = req.params.entryId;
 
     const entry = await prisma.entry.findUnique({
-      where: { id: entryId, userId: user.id }
+      where: { id: entryId }
     })
 
     if (!entry)
@@ -128,7 +125,7 @@ export default Router()
 
     const userAbilities = userPermissions(user)
     if (!userAbilities.can('delete', an("Entry", entry)))
-      throw new APIError("You are not allowed to update this entry!", { code: StatusCodes.UNAUTHORIZED })
+      throw new APIError("You are not allowed to delete this entry!", { code: StatusCodes.UNAUTHORIZED })
 
     await prisma.entry.delete({
       where: { id: entryId, userId: user.id }

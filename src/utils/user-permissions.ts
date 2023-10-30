@@ -5,7 +5,7 @@ type Actions = 'read' | 'update' | 'delete'
 type Subjects = 'Entry' | 'Settings'
 
 export default (user: User) => defineAbility((can) => {
-  can('read', 'Entry', { id: user.id })
-  can('update', 'Entry', { id: user.id })
-  can('delete', 'Entry', { id: user.id })
+  can('read', 'Entry', { userId: user.id })
+  can('update', 'Entry', { userId: user.id })
+  can('delete', 'Entry', { userId: user.id })
 })

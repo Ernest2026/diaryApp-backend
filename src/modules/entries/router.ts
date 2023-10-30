@@ -45,6 +45,8 @@ export default Router()
     } as const
 
     const entries = await prisma.entry.findMany(query)
+    console.log(user)
+    console.log(entries)
 
     entries.forEach(entry => {
       const userAbilities = userPermissions(user)

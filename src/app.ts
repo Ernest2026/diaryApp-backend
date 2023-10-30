@@ -3,8 +3,8 @@ import "express-async-errors"
 import express, { Express } from 'express'
 import config from '@/config'
 import logger from '@/utils/logger'
-import ErrorHandlerMiddleware from "./middleware/error-handler.middleware"
-import LoggerMiddleware from "./middleware/logger.middleware"
+import ErrorHandlerMiddleware from "./middleware/error-handler"
+import LoggerMiddleware from "./middleware/logger"
 import { prisma } from './utils/database'
 import AppRouter from './modules'
 import morgan from 'morgan'

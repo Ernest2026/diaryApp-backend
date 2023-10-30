@@ -3,10 +3,10 @@ import { APIError } from "@/utils/error";
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
-import JWTMiddleware from "@/middleware/jwt";
+import { verify } from "@/utils/jwt";
 
 export default Router()
-  .post("/", JWTMiddleware.verify, async (req, res) => {
+  .post("/", verify(async (req, res, next, user) => {
     const payload = z.object({
       title: z.string(),
       emoji: z.string().emoji(),
@@ -16,7 +16,7 @@ export default Router()
     const entry = await prisma.entry.create({
       data: {
         ...payload,
-        userId: res.locals.user!.id
+        userId: user.id
       }
     })
 
@@ -24,8 +24,8 @@ export default Router()
       message: "Entry created!",
       data: entry
     })
-  })
-  .get("/", async (req, res) => {
+  }))
+  .get("/", verify(async (req, res, next, user) => {
     const { limit, page } = z.object({
       limit: z.number().min(10).default(10),
       page: z.number().min(1).default(1)
@@ -34,6 +34,9 @@ export default Router()
     const query = {
       take: limit,
       skip: (page - 1) * limit,
+      where: {
+        userId: user.id
+      },
       orderBy: {
         createdAt: "desc"
       }
@@ -53,12 +56,13 @@ export default Router()
         total: count
       }
     })
-  })
-  .get("/:id", async (req, res) => {
+  }))
+  .get("/:id", verify(async (req, res, next, user) => {
     const entryId = req.params.id
 
     const entry = await prisma.entry.findUnique({
       where: {
+        userId: user.id,
         id: entryId
       }
     })
@@ -67,8 +71,8 @@ export default Router()
       throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
 
     res.json(entry)
-  })
-  .put("/:entryId", async (req, res) => {
+  }))
+  .put("/:entryId", verify(async (req, res, next, user) => {
     const entryId = req.params.entryId;
 
     const payload = z.object({
@@ -78,22 +82,22 @@ export default Router()
     }).parse(req.body);
 
     await prisma.entry.update({
-      where: { id: entryId },
+      where: { id: entryId, userId: user.id },
       data: payload
     });
 
     res.status(StatusCodes.OK).json({
       message: "Entry updated!"
     });
-  })
-  .delete("/:entryId", async (req, res) => {
+  }))
+  .delete("/:entryId", verify(async (req, res, next, user) => {
     const entryId = req.params.entryId;
 
     await prisma.entry.delete({
-      where: { id: entryId }
+      where: { id: entryId, userId: user.id }
     });
 
     res.status(StatusCodes.OK).json({
       message: "Entry deleted!"
     });
-  })
+  }))

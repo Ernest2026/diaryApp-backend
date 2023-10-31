@@ -27,6 +27,8 @@ export function bootstrap() {
 
   app.use(LoggerMiddleware)
 
+  app.get('/', (_, res) => res.send("Do you like indomie?"))
+
   app.use('/api/v1/', AppRouter)
 
   app.use((req, res) => {

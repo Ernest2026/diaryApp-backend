@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import { generateUser } from '../utils';
-import TokenService from '@/services/token';
+import TokenService from '@/utils/token';
 import { client, endpoint } from '../setup';
 import { User } from '@prisma/client'
 

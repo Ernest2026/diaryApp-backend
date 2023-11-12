@@ -7,9 +7,9 @@ export type Token = {
 };
 
 
-async function generateAccessToken(user: User) {
+async function generateAccessToken(email: string) {
   const accessToken = jwt.sign(
-    { email: user.email },
+    { email },
     config.jwt.secret.accessToken,
     { expiresIn: config.jwt.validity.accessToken },
   );
@@ -17,9 +17,9 @@ async function generateAccessToken(user: User) {
   return accessToken;
 }
 
-async function generateRefreshToken(user: User) {
+async function generateRefreshToken(email: string) {
   const refreshToken = jwt.sign(
-    { email: user.email },
+    { email },
     config.jwt.secret.refreshToken,
     { expiresIn: config.jwt.validity.refreshToken },
   );

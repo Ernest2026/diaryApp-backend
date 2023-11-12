@@ -1,4 +1,4 @@
-import { prisma } from "@/utils/database"
+import { prisma } from "@/utils/database_"
 import { chance } from "./setup"
 import config from "@/config"
 

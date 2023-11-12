@@ -1,5 +1,5 @@
-import { prisma } from "@/utils/database"
-import TokenService from "@/services/token"
+import { prisma } from "@/utils/database_"
+import TokenService from "@/utils/token"
 import { APIError } from "@/utils/error"
 import { NextFunction, Request, Response } from "express"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"

@@ -1,10 +1,10 @@
 import { subject as an } from '@casl/ability'
-import { prisma } from "@/utils/database";
+import { prisma } from "@/utils/database_";
 import { APIError } from "@/utils/error";
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
-import { verify } from "@/utils/jwt";
+import { verify } from "@/middleware/jwt";
 import userPermissions from "@/utils/user-permissions";
 
 export default Router()

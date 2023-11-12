@@ -36,7 +36,7 @@ class Auth {
           refreshToken,
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new APIError(error.message || "Failed to signup", {
         code: StatusCodes.INTERNAL_SERVER_ERROR,
       });
@@ -47,7 +47,7 @@ class Auth {
     try {
       const { email, password } = req.body;
       const data = await UserService.find(email);
-      if (!data) {
+      if (!data || !data.password) {
         throw new APIError("Email doesn't exist", {
           code: StatusCodes.EXPECTATION_FAILED,
         });
@@ -68,7 +68,7 @@ class Auth {
           refreshToken,
         },
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new APIError(error.message || "Failed to login", {
         code: StatusCodes.INTERNAL_SERVER_ERROR,
       });

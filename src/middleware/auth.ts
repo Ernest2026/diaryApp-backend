@@ -9,7 +9,7 @@ class Auth {
         this.args = args;
     }
 
-    async inspectSignup(req: Request, res: Response, next: NextFunction) {
+    async inspectSignup(req: any, res: any, next: any) {
         try {
             await AuthValidations.validateSignup(req.body);
             next();
@@ -18,7 +18,7 @@ class Auth {
         }
     }
     
-    async inspectLogin(req: Request, res: Response, next: NextFunction) {
+    async inspectLogin(req: any, res: any, next: any) {
         try {
             await AuthValidations.validateLogin(req.body);
             next();

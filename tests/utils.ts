@@ -1,6 +1,8 @@
 import { prisma } from "@/utils/database_"
-import { chance } from "./setup"
+import Chance from 'chance'
 import config from "@/config"
+
+const chance = new Chance();
 
 export async function generateUser() {
   return await prisma.user.create({

@@ -5,6 +5,6 @@ import { AuthRouter } from "./auth";
 const AppRouter = Router()
 
 AppRouter.use("/entries", EntriesRouter)
-AppRouter.use("/", AuthRouter)
+AppRouter.use("/auth", AuthRouter)
 
 export default AppRouter

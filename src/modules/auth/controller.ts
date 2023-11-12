@@ -1,10 +1,9 @@
-import { prisma } from "@/utils/database_";
 import { APIError } from "@/utils/error";
+import { getDecryptedPassword, getEncryptedPassword } from "@/utils/pwdHash";
+import TokenService from "@/utils/token";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import AppLogger from "@/utils/logger";
 import UserService from "./service";
-import TokenService from "@/utils/token";
 
 class Auth {
   args: (string | undefined)[];
@@ -24,7 +23,7 @@ class Auth {
       const data = await UserService.create({
         fullname,
         email,
-        password,
+        password: await getEncryptedPassword(password),
         updatedAt: new Date(),
       });
       const accessToken = await TokenService.generateAccessToken(email);
@@ -39,6 +38,38 @@ class Auth {
       });
     } catch (error) {
       throw new APIError(error.message || "Failed to signup", {
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
+      });
+    }
+  }
+
+  async login(req: Request, res: Response) {
+    try {
+      const { email, password } = req.body;
+      const data = await UserService.find(email);
+      if (!data) {
+        throw new APIError("Email doesn't exist", {
+          code: StatusCodes.EXPECTATION_FAILED,
+        });
+      }
+      const checkPwd = await getDecryptedPassword(password, data.password);
+      if (!checkPwd) {
+        throw new APIError("Wrong password", {
+          code: StatusCodes.EXPECTATION_FAILED,
+        });
+      }
+      const accessToken = await TokenService.generateAccessToken(email);
+      const refreshToken = await TokenService.generateRefreshToken(email);
+      res.status(StatusCodes.CREATED).json({
+        message: "Login successfully",
+        data,
+        token: {
+          accessToken,
+          refreshToken,
+        },
+      });
+    } catch (error) {
+      throw new APIError(error.message || "Failed to login", {
         code: StatusCodes.INTERNAL_SERVER_ERROR,
       });
     }

@@ -20,6 +20,18 @@ class AuthValidations {
       throw new APIError("Invalid input", { code: StatusCodes.BAD_REQUEST });
     return true;
   }
+  
+  async validateLogin(payload: object): Promise<boolean> {
+    const schema = z
+      .object({
+        email: z.string().email({ message: "Invalid email address" }),
+        password: z.string(),
+      })
+      .parse(payload);
+    if (!schema)
+      throw new APIError("Invalid input", { code: StatusCodes.BAD_REQUEST });
+    return true;
+  }
 }
 
 export default new AuthValidations();

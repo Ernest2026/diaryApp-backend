@@ -17,6 +17,15 @@ class Auth {
             throw new APIError("Input not validated", {code: StatusCodes.BAD_REQUEST})
         }
     }
+    
+    async inspectLogin(req: Request, res: Response, next: NextFunction) {
+        try {
+            await AuthValidations.validateLogin(req.body);
+            next();
+        } catch (error: any) {
+            throw new APIError("Input not validated", {code: StatusCodes.BAD_REQUEST})
+        }
+    }
 }
 
 export default new Auth()

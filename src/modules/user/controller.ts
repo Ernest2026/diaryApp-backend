@@ -2,6 +2,8 @@ import GlobalLogger from "@/utils/logger";
 import { Request, Response } from "express";
 import UserService from "./service";
 import config from "@/config";
+import { APIError } from "@/utils/error";
+import { StatusCodes } from "http-status-codes";
 
 class UserController {
   // constructor(parameters) {
@@ -11,7 +13,10 @@ class UserController {
   async update(req: Request, res: Response) {
     const imageUrl = config.server.hosturl + '/images/' + req.file?.filename;
     const user = await UserService.update({...req.body, imageUrl}, req);
-    res.json({message: "User updated successfully"});
+    if (!user) {
+        throw new APIError("Update user failed", {code: StatusCodes.INTERNAL_SERVER_ERROR})
+    }
+    res.status(StatusCodes.CREATED).json({message: "User updated successfully"});
   }
 }
 

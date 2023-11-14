@@ -4,7 +4,7 @@ import TokenService from "@/utils/token"
 import { NextFunction, Request, Response } from "express"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
 
-export async function verify(req: Request, res: Response, next: NextFunction) {
+export async function verify(req: any, res: Response, next: NextFunction) {
   // return async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization
     if (!authHeader) {

@@ -3,7 +3,7 @@ import { getDecryptedPassword, getEncryptedPassword } from "@/utils/pwdHash";
 import TokenService from "@/utils/token";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import UserService from "./service";
+import UserService from "../user/service";
 
 class Auth {
   args: (string | undefined)[];

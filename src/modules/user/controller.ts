@@ -10,7 +10,7 @@ class UserController {
 
   // }
 
-  async update(req: Request, res: Response) {
+  async updateUser(req: Request, res: Response) {
     const imageUrl = config.server.hosturl + '/images/' + req.file?.filename;
     const user = await UserService.update({...req.body, imageUrl}, req);
     if (!user) {

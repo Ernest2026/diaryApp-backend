@@ -10,3 +10,12 @@ export interface UserType extends Document {
   entriesId?: string;
   settingId?: string;
 }
+
+export interface EntryType extends Document {
+  title?: string;
+  emoji?: string;
+  text?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  userId?: string;
+}

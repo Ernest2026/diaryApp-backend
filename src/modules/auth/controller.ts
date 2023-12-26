@@ -1,6 +1,6 @@
 import { APIError } from "@/utils/error";
 import { getDecryptedPassword, getEncryptedPassword } from "@/utils/pwdHash";
-import TokenService from "@/utils/token";
+import TokenService from "@/services/token";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import UserService from "./service";

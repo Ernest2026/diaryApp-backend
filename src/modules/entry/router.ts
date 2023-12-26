@@ -10,9 +10,9 @@ import * as EntryService from "@/services/entry";
 export default Router()
   .post("/", verify(async (req, res, next, user) => {
     const payload = z.object({
-      title: z.string(),
-      emoji: z.string().emoji(),
-      text: z.string()
+      title: z.string({ required_error: "Please supply a title" }),
+      emoji: z.string({ required_error: "Please supply an emoji" }).emoji("Invalid emoji"),
+      text: z.string({ required_error: "Please supply some text" })
     }).parse(req.body)
 
     try {
@@ -88,7 +88,7 @@ export default Router()
       title: z.string(),
       emoji: z.string().emoji(),
       text: z.string()
-    }).parse(req.body);
+    }).partial().parse(req.body);
 
     const entry = await EntryService.getById(entryId)
 

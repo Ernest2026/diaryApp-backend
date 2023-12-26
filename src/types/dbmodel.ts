@@ -21,7 +21,13 @@ export interface IUserDb {
   createdAt: Date;
   updatedAt: Date;
   entriesId?: Types.ObjectId | null;
-  settingId?: types.ObjectId | null;
+  settingId?: Types.ObjectId | null;
+}
+
+export interface IUserPayload {
+  fullname: string;
+  email: string;
+  password: string;
 }
 
 export interface IEntryDb {

@@ -1,7 +1,7 @@
 import { APIError } from '@/utils/error';
 import { StatusCodes } from 'http-status-codes';
 import { UserType } from '../../types/dbmodel';
-import UserModel from './model';
+import UserModel from '@/models/user';
 import GlobalLogger from '@/utils/logger';
 import { Document } from 'mongoose';
 

@@ -1,11 +1,9 @@
 import config from "@/config";
 import * as jwt from "jsonwebtoken";
-import type { User } from "@prisma/client";
 
 export type Token = {
   email: string;
 };
-
 
 async function generateAccessToken(email: string) {
   const accessToken = jwt.sign(

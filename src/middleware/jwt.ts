@@ -1,12 +1,11 @@
-// import { prisma } from "@/utils/database_"
-import TokenService from "@/services/token"
+import { prisma } from "@/utils/database_"
+import TokenService from "@/utils/token"
 import { APIError } from "@/utils/error"
 import { NextFunction, Request, Response } from "express"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
-import UserService from '@/services/user'
-import { IUserDb } from "@/types/dbmodel"
+import { User } from '@prisma/client'
 
-export function verify(func: (req: Request, res: Response, next: NextFunction, user: IUserDb) => Promise<void>) {
+export function verify(func: (req: Request, res: Response, next: NextFunction, user: User) => Promise<void>) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization
     if (!authHeader) {
@@ -24,7 +23,11 @@ export function verify(func: (req: Request, res: Response, next: NextFunction, u
       throw new APIError("Invalid token", { code: StatusCodes.UNAUTHORIZED })
     }
 
-    const user = await UserService.findByEmail(verifiedAccessToken.email)
+    const user = await prisma.user.findUnique({
+      where: {
+        email: verifiedAccessToken.email
+      }
+    })
 
     if (!user)
       throw new APIError(ReasonPhrases.UNAUTHORIZED, { code: StatusCodes.UNAUTHORIZED })

@@ -40,7 +40,7 @@ const UserSchema = new Schema(
   },
   {
     toJSON: {
-      transform: function(doc, ret) {
+      transform: function (doc, ret) {
         delete ret.password;
         delete ret.__v;
       },
@@ -48,5 +48,4 @@ const UserSchema = new Schema(
   }
 );
 
-const UserModel = model('User', UserSchema);
-export default UserModel
+export default model('User', UserSchema);

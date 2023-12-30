@@ -1,11 +1,13 @@
 import { defineAbility } from '@casl/ability'
-import { User } from '@prisma/client'
+import { IUserDb } from '@/types/dbmodel'
 
 type Actions = 'read' | 'update' | 'delete'
 type Subjects = 'Entry' | 'Settings'
 
-export default (user: User) => defineAbility((can) => {
-  can('read', 'Entry', { userId: user.id })
-  can('update', 'Entry', { userId: user.id })
-  can('delete', 'Entry', { userId: user.id })
+const UserPermissions = (user: IUserDb) => defineAbility((can) => {
+  can('read', 'Entry', { userId: user._id })
+  can('update', 'Entry', { userId: user._id })
+  can('delete', 'Entry', { userId: user._id })
 })
+
+export default UserPermissions

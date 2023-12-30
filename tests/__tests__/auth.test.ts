@@ -3,6 +3,7 @@ import app from "@/app";
 import { Chance } from "chance";
 import { StatusCodes } from "http-status-codes";
 import DBConnection from "@/utils/database";
+import { deleteGeneratedUser } from "../helpers";
 
 const request = supertest(app);
 const chance = new Chance()
@@ -20,6 +21,7 @@ beforeAll(async () => {
 })
 
 afterAll(async () => {
+  await deleteGeneratedUser(user.email)
   await DBConnection.mongoDisconnect();
 })
 

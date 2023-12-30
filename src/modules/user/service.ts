@@ -1,9 +1,10 @@
 import { UserType } from "@/types/dbmodel";
 import { APIError } from "@/utils/error";
 import { StatusCodes } from "http-status-codes";
-import UserModel from "../auth/model";
+// import UserModel from "../auth/model";
 import GlobalLogger from "@/utils/logger";
 import { Request } from "express";
+import UserModel from "@/models/user";
 
 class UserService {
   // constructor(parameters) {
@@ -16,13 +17,25 @@ class UserService {
       // GlobalLogger.debug(payload)
       return user;
     } catch (error: any) {
-      throw new APIError("Error from auth service", {
+      throw new APIError("Error from create user service", {
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
+      });
+    }
+  }
+  
+  async deleteUser(payload: UserType) {
+    try {
+      const user = await UserModel.deleteOne(payload);
+      // GlobalLogger.debug(payload)
+      return user;
+    } catch (error: any) {
+      throw new APIError("Error from delete user service", {
         code: StatusCodes.INTERNAL_SERVER_ERROR,
       });
     }
   }
 
-  async find(email: string) {
+  async findByEmail(email: string) {
     try {
       if (!email) {
         const profile: UserType | null = await UserModel.find();
@@ -32,13 +45,13 @@ class UserService {
       const profile = await UserModel.findOne({ email });
       return profile;
     } catch (error: any) {
-      throw new APIError("error from auth service", {
+      throw new APIError("error from find user by email service", {
         code: StatusCodes.INTERNAL_SERVER_ERROR,
       });
     }
   }
 
-  async update({ fullname, imageUrl }: UserType, req: any) {
+  async updateUser({ fullname, imageUrl }: UserType, req: any) {
     try {
       const user = await UserModel.updateOne(
         { email: req.userEmail },
@@ -46,7 +59,7 @@ class UserService {
       );
       return user;
     } catch (error: any) {
-      throw new APIError("Error from user service", {
+      throw new APIError("Error from update user service", {
         code: StatusCodes.INTERNAL_SERVER_ERROR,
       });
     }

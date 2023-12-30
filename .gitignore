@@ -108,3 +108,4 @@ yarn.lock
 
 # local file
 .list
+uploads/

@@ -1,9 +1,9 @@
 import { client, logger } from "../setup"
 import { StatusCodes } from "http-status-codes";
 import DBConnection from "@/utils/database";
-import { generateRandomUser } from "../helpers";
+import { deleteGeneratedUser, generateRandomUser } from "../helpers";
 import { IUserDb } from "@/types/dbmodel";
-import TokenService from "@/services/token";
+import TokenService from "@/utils/token";
 
 export const baseUrl = "/api/v1/entries";
 
@@ -24,6 +24,8 @@ describe("Entry tests", () => {
   })
 
   afterAll(async () => {
+    await deleteGeneratedUser(user.email);
+    await deleteGeneratedUser(anotherUser.email);
     await DBConnection.mongoDisconnect();
   })
 

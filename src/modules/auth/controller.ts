@@ -1,9 +1,9 @@
 import { APIError } from "@/utils/error";
 import { getDecryptedPassword, getEncryptedPassword } from "@/utils/pwdHash";
-import TokenService from "@/services/token";
+import TokenService from "@/utils/token";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import UserService from "./service";
+import UserService from "../user/service";
 
 class Auth {
   args: (string | undefined)[];
@@ -14,7 +14,7 @@ class Auth {
   async signup(req: Request, res: Response) {
     try {
       const { fullname, email, password } = req.body;
-      const userExist = await UserService.find(email);
+      const userExist = await UserService.findByEmail(email);
       if (userExist) {
         throw new APIError("Email already exist", {
           code: StatusCodes.EXPECTATION_FAILED,
@@ -46,7 +46,7 @@ class Auth {
   async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
-      const data = await UserService.find(email);
+      const data = await UserService.findByEmail(email);
       if (!data || !data.password) {
         throw new APIError("Email doesn't exist", {
           code: StatusCodes.EXPECTATION_FAILED,

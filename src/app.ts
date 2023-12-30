@@ -14,8 +14,9 @@ import DBConnection from "./utils/database";
 export function bootstrap() {
   const app = express();
 
-  app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
+  app.use(express.urlencoded({ extended: false }));
+  app.use('/images', express.static('uploads'))
 
   app.options("*", cors());
   app.use(morgan("combined"));

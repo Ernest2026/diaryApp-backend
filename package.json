@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@casl/ability": "^6.5.0",
     "@t3-oss/env-core": "^0.6.1",
     "bcrypt": "^5.1.1",
     "chance": "^1.1.11",

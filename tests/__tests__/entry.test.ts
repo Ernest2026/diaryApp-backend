@@ -38,8 +38,8 @@ describe("Entry tests", () => {
         text: "This is my first entry",
         emoji: "👨",
       });
-    entryId = res.body.data._id
     expect(res.status).toBe(StatusCodes.CREATED)
+    entryId = res.body.data._id
   });
 
   test("that a user can get all their entries", async () => {

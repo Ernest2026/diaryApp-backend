@@ -7,6 +7,6 @@ const AppRouter = Router()
 
 AppRouter.use("/auth", AuthRouter)
 AppRouter.use("/", UserRouter)
-AppRouter.use("/entry", EntriesRouter)
+AppRouter.use("/entries", EntriesRouter)
 
 export default AppRouter

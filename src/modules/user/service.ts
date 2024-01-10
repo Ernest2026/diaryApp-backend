@@ -22,7 +22,7 @@ class UserService {
       });
     }
   }
-  
+
   async deleteUser(payload: UserType) {
     try {
       const user = await UserModel.deleteOne(payload);
@@ -37,13 +37,7 @@ class UserService {
 
   async findByEmail(email: string) {
     try {
-      if (!email) {
-        const profile: UserType | null = await UserModel.find();
-        return profile;
-        // throw new APIError('Enter email to find', {code: StatusCodes.INTERNAL_SERVER_ERROR})
-      }
-      const profile = await UserModel.findOne({ email });
-      return profile;
+      return await UserModel.findOne({ email });
     } catch (error: any) {
       throw new APIError("error from find user by email service", {
         code: StatusCodes.INTERNAL_SERVER_ERROR,

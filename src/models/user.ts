@@ -1,6 +1,7 @@
+import { IUserDb } from '@/types/dbmodel';
 import { Schema, model } from 'mongoose';
 
-const UserSchema = new Schema(
+const UserSchema = new Schema<IUserDb>(
   {
     fullname: {
       type: String,
@@ -48,5 +49,5 @@ const UserSchema = new Schema(
   }
 );
 
-const UserModel = model('User', UserSchema);
+const UserModel = model<IUserDb>('User', UserSchema);
 export default UserModel

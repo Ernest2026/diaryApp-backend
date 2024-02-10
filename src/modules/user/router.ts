@@ -4,11 +4,10 @@ import UserController from "./controller";
 import path from "path";
 import { verify } from "@/middleware/jwt";
 
+
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
+  destination: path.resolve(path.join(process.cwd(), "uploads")),
+  filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, uniqueSuffix + path.extname(file.originalname)); //Appending extension
   },

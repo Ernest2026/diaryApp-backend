@@ -3,123 +3,130 @@ import { APIError } from "@/utils/error";
 import { Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
-import { verify } from "@/middleware/jwt";
+import { verify } from "@/middleware/jwt2";
 import userPermissions from "@/utils/user-permissions";
 import * as EntryService from "@/services/entry";
 
-export default Router()
-  // .post("/", verify(async (req, res, next, user) => {
-  //   const payload = z.object({
-  //     title: z.string({ required_error: "Please supply a title" }),
-  //     emoji: z.string({ required_error: "Please supply an emoji" }).emoji("Invalid emoji"),
-  //     text: z.string({ required_error: "Please supply some text" })
-  //   }).parse(req.body)
+const router = Router()
 
-  //   try {
-  //     const entry = await EntryService.create(Object.assign(payload, {
-  //       userId: user._id.toString(),
-  //       updatedAt: new Date(),
-  //     }))
+router.post("/", verify(async (req, res, next, user) => {
+  const payload = z.object({
+    title: z.string({ required_error: "Please supply a title" }),
+    emoji: z.string({ required_error: "Please supply an emoji" }).emoji("Invalid emoji"),
+    text: z.string({ required_error: "Please supply some text" })
+  }).parse(req.body)
 
-  //     res.status(StatusCodes.CREATED).json({
-  //       message: "Entry created!",
-  //       data: entry
-  //     })
-  //   }
-  //   catch (error) {
-  //     res.locals.logger.debug("Error while creating entry:", error)
-  //     throw new APIError("Failed to create an entry", { code: StatusCodes.INTERNAL_SERVER_ERROR })
-  //   }
-  // }))
-  // .get("/", verify(async (req, res, next, user) => {
-  //   const { limit, page } = z.object({
-  //     limit: z.number().min(10).default(10),
-  //     page: z.number().min(1).default(1)
-  //   }).parse(req.query)
+  try {
+    const entry = await EntryService.create(Object.assign(payload, {
+      userId: user._id.toString(),
+      updatedAt: new Date(),
+    }))
 
-  //   const query = {
-  //     take: limit,
-  //     skip: (page - 1) * limit,
-  //     where: {
-  //       userId: user._id.toString()
-  //     },
-  //     orderBy: {
-  //       createdAt: "desc"
-  //     }
-  //   }
+    res.status(StatusCodes.CREATED).json({
+      message: "Entry created!",
+      data: entry
+    })
+  }
+  catch (error) {
+    res.locals.logger.debug("Error while creating entry:", error)
+    throw new APIError("Failed to create an entry", { code: StatusCodes.INTERNAL_SERVER_ERROR })
+  }
+}))
 
-  //   const entries = await EntryService.getByUserId({ limit, page, userId: user._id.toString() })
+router.get("/", verify(async (req, res, next, user) => {
+  const { limit, page } = z.object({
+    limit: z.number().min(10).default(10),
+    page: z.number().min(1).default(1)
+  }).parse(req.query)
 
-  //   entries.forEach(entry => {
-  //     const userAbilities = userPermissions(user)
-  //     if (!userAbilities.can('read', an("Entry", entry)))
-  //       throw new APIError("You are not allowed to read this entry!", { code: StatusCodes.UNAUTHORIZED })
-  //   })
+  const query = {
+    take: limit,
+    skip: (page - 1) * limit,
+    where: {
+      userId: user._id.toString()
+    },
+    orderBy: {
+      createdAt: "desc"
+    }
+  }
 
-  //   const count = await EntryService.countUserEntries({ userId: user._id.toString() })
+  const entries = await EntryService.getByUserId({ limit, page, userId: user._id.toString() })
 
-  //   res.json({
-  //     data: entries,
-  //     meta: {
-  //       page,
-  //       perPage: limit,
-  //       total: count
-  //     }
-  //   })
-  // }))
-  // .get("/:id", verify(async (req, res, next, user) => {
-  //   const entryId = req.params.id
+  entries.forEach(entry => {
+    const userAbilities = userPermissions(user)
+    if (!userAbilities.can('read', an("Entry", entry)))
+      throw new APIError("You are not allowed to read this entry!", { code: StatusCodes.UNAUTHORIZED })
+  })
 
-  //   const entry = await EntryService.getById(entryId)
+  const count = await EntryService.countUserEntries({ userId: user._id.toString() })
 
-  //   if (!entry)
-  //     throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
+  res.json({
+    data: entries,
+    meta: {
+      page,
+      perPage: limit,
+      total: count
+    }
+  })
+}))
 
-  //   const userAbilities = userPermissions(user)
-  //   if (!userAbilities.can('read', an("Entry", entry)))
-  //     throw new APIError("You are not allowed to read this entry!", { code: StatusCodes.UNAUTHORIZED })
+router.get("/:id", verify(async (req, res, next, user) => {
+  const entryId = req.params.id
 
-  //   res.json(entry)
-  // }))
-  // .put("/:id", verify(async (req, res, next, user) => {
-  //   const entryId = req.params.id;
+  const entry = await EntryService.getById(entryId)
 
-  //   const payload = z.object({
-  //     title: z.string(),
-  //     emoji: z.string().emoji(),
-  //     text: z.string()
-  //   }).partial().parse(req.body);
+  if (!entry)
+    throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
 
-  //   const entry = await EntryService.getById(entryId)
+  const userAbilities = userPermissions(user)
+  if (!userAbilities.can('read', an("Entry", entry)))
+    throw new APIError("You are not allowed to read this entry!", { code: StatusCodes.UNAUTHORIZED })
 
-  //   if (!entry)
-  //     throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
+  res.json(entry)
+}))
 
-  //   const userAbilities = userPermissions(user)
-  //   if (!userAbilities.can('update', an("Entry", entry)))
-  //     throw new APIError("You are not allowed to update this entry!", { code: StatusCodes.UNAUTHORIZED })
+router.put("/:id", verify(async (req, res, next, user) => {
+  const entryId = req.params.id;
 
-  //   await EntryService.updateById(entryId, payload)
+  const payload = z.object({
+    title: z.string(),
+    emoji: z.string().emoji(),
+    text: z.string()
+  }).partial().parse(req.body);
 
-  //   res.json({
-  //     message: "Entry updated!"
-  //   });
-  // }))
-  // .delete("/:id", verify(async (req, res, next, user) => {
-  //   const entryId = req.params.id;
+  const entry = await EntryService.getById(entryId)
 
-  //   const entry = await EntryService.getById(entryId)
+  if (!entry)
+    throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
 
-  //   if (!entry)
-  //     throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
+  const userAbilities = userPermissions(user)
+  if (!userAbilities.can('update', an("Entry", entry)))
+    throw new APIError("You are not allowed to update this entry!", { code: StatusCodes.UNAUTHORIZED })
 
-  //   const userAbilities = userPermissions(user)
-  //   if (!userAbilities.can('delete', an("Entry", entry)))
-  //     throw new APIError("You are not allowed to delete this entry!", { code: StatusCodes.UNAUTHORIZED })
+  await EntryService.updateById(entryId, payload)
 
-  //   await EntryService.deleteById(entryId)
+  res.json({
+    message: "Entry updated!"
+  });
+}))
 
-  //   res.json({
-  //     message: "Entry deleted!"
-  //   });
-  // }))
+router.delete("/:id", verify(async (req, res, next, user) => {
+  const entryId = req.params.id;
+
+  const entry = await EntryService.getById(entryId)
+
+  if (!entry)
+    throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
+
+  const userAbilities = userPermissions(user)
+  if (!userAbilities.can('delete', an("Entry", entry)))
+    throw new APIError("You are not allowed to delete this entry!", { code: StatusCodes.UNAUTHORIZED })
+
+  await EntryService.deleteById(entryId)
+
+  res.json({
+    message: "Entry deleted!"
+  });
+}))
+
+export default router

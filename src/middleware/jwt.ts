@@ -32,7 +32,7 @@ export async function verify(req: any, res: Response, next: NextFunction) {
       code: StatusCodes.UNAUTHORIZED,
     });
 
-  req.userEmail = verifiedAccessToken.email;
+  res.locals.user = user;
   next();
 }
 // }

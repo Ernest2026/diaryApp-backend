@@ -45,10 +45,10 @@ class UserService {
     }
   }
 
-  async updateUser({ fullname, imageUrl }: UserType, req: any) {
+  async updateUser({ fullname, imageUrl }: UserType, email: string) {
     try {
       const user = await UserModel.updateOne(
-        { email: req.userEmail },
+        { email },
         { fullname, imageUrl }
       );
       return user;

@@ -1,7 +1,7 @@
 import { APIError } from "@/utils/error";
-import { NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import AuthValidations from "../validations/auth";
+import AuthValidations from "./validation";
 
 class Auth {
     args: (string | undefined)[];
@@ -9,7 +9,7 @@ class Auth {
         this.args = args;
     }
 
-    async inspectSignup(req: any, res: any, next: any) {
+    async inspectSignup(req: Request, res: Response, next: NextFunction) {
         try {
             await AuthValidations.validateSignup(req.body);
             next();
@@ -18,7 +18,7 @@ class Auth {
         }
     }
     
-    async inspectLogin(req: any, res: any, next: any) {
+    async inspectLogin(req: Request, res: Response, next: NextFunction) {
         try {
             await AuthValidations.validateLogin(req.body);
             next();

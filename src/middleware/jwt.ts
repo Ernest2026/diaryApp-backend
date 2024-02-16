@@ -1,11 +1,9 @@
 // import { prisma } from "@/utils/database_"
-import TokenService from "@/utils/token";
-import { APIError } from "@/utils/error";
-import { NextFunction, Request, Response } from "express";
-import { ReasonPhrases, StatusCodes } from "http-status-codes";
 import UserService from "@/modules/user/service";
-import { IUserDb } from "@/types/dbmodel";
-import GlobalLogger from "@/utils/logger";
+import { APIError } from "@/utils/error";
+import TokenService from "@/utils/token";
+import { NextFunction, Response } from "express";
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
 // export function verify(func: (req: Request, res: Response, next: NextFunction, user: IUserDb) => Promise<void>) {
 export async function verify(req: any, res: Response, next: NextFunction) {

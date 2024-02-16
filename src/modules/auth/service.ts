@@ -1,15 +1,15 @@
 import { APIError } from '@/utils/error';
 import { StatusCodes } from 'http-status-codes';
 import { UserType } from '../../types/dbmodel';
-import UserModel from '@/models/user';
+import UserModel from '@/modules/user/model';
 import GlobalLogger from '@/utils/logger';
 import { Document } from 'mongoose';
 
 class User {
-  args: (string | undefined)[];
-  constructor(...args: (string | undefined)[]) {
-    this.args = args;
-  }
+  // args: (string | undefined)[];
+  // constructor(...args: (string | undefined)[]) {
+  //   this.args = args;
+  // }
 
   async create(payload: UserType) {
     try {

@@ -1,10 +1,7 @@
 import { UserType } from "@/types/dbmodel";
 import { APIError } from "@/utils/error";
 import { StatusCodes } from "http-status-codes";
-// import UserModel from "../auth/model";
-import GlobalLogger from "@/utils/logger";
-import { Request } from "express";
-import UserModel from "@/models/user";
+import UserModel from "@/modules/user/model";
 
 class UserService {
   // constructor(parameters) {

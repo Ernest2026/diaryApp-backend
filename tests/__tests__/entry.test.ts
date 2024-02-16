@@ -1,4 +1,4 @@
-import { client, logger } from "../setup"
+import { client, logger } from "../setup";
 import { StatusCodes } from "http-status-codes";
 import DBConnection from "@/utils/database";
 import { deleteGeneratedUser, generateRandomUser } from "../helpers";
@@ -7,28 +7,28 @@ import TokenService from "@/utils/token";
 
 export const baseUrl = "/api/v1/entries";
 
-describe("Entry tests", () => {
-  let user: IUserDb;
-  let token: string
-  let anotherUser: IUserDb;
-  let anotherUserToken: string
-  let entryId: string
+let user: IUserDb;
+let token: string;
+let anotherUser: IUserDb;
+let anotherUserToken: string;
+let entryId: string;
 
-  beforeAll(async () => {
-    await DBConnection.mongoConnect();
-    user = await generateRandomUser()
-    token = await TokenService.generateAccessToken(user.email)
+beforeAll(async () => {
+  await DBConnection.mongoConnect();
+  user = await generateRandomUser();
+  token = await TokenService.generateAccessToken(user.email);
 
-    anotherUser = await generateRandomUser()
-    anotherUserToken = await TokenService.generateAccessToken(anotherUser.email)
-  })
+  anotherUser = await generateRandomUser();
+  anotherUserToken = await TokenService.generateAccessToken(anotherUser.email);
+});
 
-  afterAll(async () => {
-    await deleteGeneratedUser(user.email);
-    await deleteGeneratedUser(anotherUser.email);
-    await DBConnection.mongoDisconnect();
-  })
+afterAll(async () => {
+  await deleteGeneratedUser(user.email);
+  await deleteGeneratedUser(anotherUser.email);
+  await DBConnection.mongoDisconnect();
+});
 
+describe("POST /", () => {
   test("that a new entry can be created by a user", async () => {
     const res = await client
       .post(`${baseUrl}`)
@@ -38,27 +38,40 @@ describe("Entry tests", () => {
         text: "This is my first entry",
         emoji: "👨",
       });
-    expect(res.status).toBe(StatusCodes.CREATED)
-    entryId = res.body.data._id
+    expect(res.status).toBe(StatusCodes.CREATED);
+    entryId = res.body.data._id;
   });
+});
 
+describe("GET /", () => {
   test("that a user can get all their entries", async () => {
     const res = await client
       .get(`${baseUrl}`)
       .set("Authorization", `Bearer ${token}`);
-    expect(res.status).toBe(StatusCodes.OK)
-    expect(res.body).toHaveProperty("meta")
-    expect(res.body).toHaveProperty("data")
-    expect(res.body.data.length).not.toBe(0)
-  })
+    expect(res.status).toBe(StatusCodes.OK);
+    expect(res.body).toHaveProperty("meta");
+    expect(res.body).toHaveProperty("data");
+    expect(res.body.data.length).not.toBe(0);
+  });
+});
 
+describe("GET /:id", () => {
   test("that a user can get one of their entries", async () => {
     const res = await client
       .get(`${baseUrl}/${entryId}`)
       .set("Authorization", `Bearer ${token}`);
-    expect(res.status).toBe(StatusCodes.OK)
-  })
+    expect(res.status).toBe(StatusCodes.OK);
+  });
 
+  test("that a user cannot get another user's entry", async () => {
+    const res = await client
+      .get(`${baseUrl}/${entryId}`)
+      .set("Authorization", `Bearer ${anotherUserToken}`);
+    expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
+  });
+});
+
+describe("PUT /:id", () => {
   test("that a user can update one of their entries", async () => {
     const res = await client
       .put(`${baseUrl}/${entryId}`)
@@ -67,15 +80,8 @@ describe("Entry tests", () => {
         title: "Updated my first entry",
         text: "This entry was updated",
       });
-    expect(res.status).toBe(StatusCodes.OK)
-  })
-
-  test("that a user cannot get another user's entry", async () => {
-    const res = await client
-      .get(`${baseUrl}/${entryId}`)
-      .set("Authorization", `Bearer ${anotherUserToken}`);
-    expect(res.status).toBe(StatusCodes.UNAUTHORIZED)
-  })
+    expect(res.status).toBe(StatusCodes.OK);
+  });
 
   test("that a user cannot update another user's entry", async () => {
     const res = await client
@@ -85,32 +91,34 @@ describe("Entry tests", () => {
         title: "Updated my first entry",
         text: "This entry was updated",
       });
-    expect(res.status).toBe(StatusCodes.UNAUTHORIZED)
-  })
+    expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
+  });
+});
 
+describe("DELETE /:id", () => {
   test("that a user cannot delete another user's entry", async () => {
     const res = await client
       .delete(`${baseUrl}/${entryId}`)
-      .set("Authorization", `Bearer ${anotherUserToken}`)
+      .set("Authorization", `Bearer ${anotherUserToken}`);
 
-    expect(res.status).toBe(StatusCodes.UNAUTHORIZED)
-  })
+    expect(res.status).toBe(StatusCodes.UNAUTHORIZED);
+  });
 
   test("that a user can delete one of their entries", async () => {
     const res = await client
       .delete(`${baseUrl}/${entryId}`)
-      .set("Authorization", `Bearer ${token}`)
+      .set("Authorization", `Bearer ${token}`);
 
-    expect(res.status).toBe(StatusCodes.OK)
-  })
+    expect(res.status).toBe(StatusCodes.OK);
+  });
 
   test("that a user cannot access a deleted entry", async () => {
     const res = await client
       .get(`${baseUrl}/${entryId}`)
       .set("Authorization", `Bearer ${token}`);
 
-    expect(res.status).toBe(StatusCodes.NOT_FOUND)
-  })
+    expect(res.status).toBe(StatusCodes.NOT_FOUND);
+  });
 
   test("that a user cannot update a deleted entry", async () => {
     const res = await client
@@ -120,14 +128,14 @@ describe("Entry tests", () => {
         title: "Updated my first entry",
         text: "This entry was updated",
       });
-    expect(res.status).toBe(StatusCodes.NOT_FOUND)
-  })
+    expect(res.status).toBe(StatusCodes.NOT_FOUND);
+  });
 
   test("that a user cannot delete a deleted entry", async () => {
     const res = await client
       .delete(`${baseUrl}/${entryId}`)
-      .set("Authorization", `Bearer ${token}`)
+      .set("Authorization", `Bearer ${token}`);
 
-    expect(res.status).toBe(StatusCodes.NOT_FOUND)
-  })
+    expect(res.status).toBe(StatusCodes.NOT_FOUND);
+  });
 });

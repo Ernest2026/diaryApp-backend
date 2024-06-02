@@ -13,7 +13,10 @@ class UserController {
   // }
 
   async update(req: Request, res: Response) {
-    const imageUrl = config.server.hosturl + '/images/' + req.file?.filename;
+    // localhost:5000
+    // GlobalLogger.debug("request is ",req.headers.host);
+    
+    const imageUrl = req.headers.host + '/images/' + req.file?.filename;
     const user = await UserService.updateUser({...req.body, imageUrl}, res.locals.user.email);
 
     if (config.server.node_env == "test")

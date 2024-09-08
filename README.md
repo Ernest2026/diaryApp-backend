@@ -8,7 +8,10 @@ https://www.figma.com/file/mInGGZavWcHPtrekfNnHkw/Diaree!?type=design&node-id=0-
 
 # Postman documentation
 
-https://red-crater-997277.postman.co/workspace/DiaryApp~a006d07f-0694-4215-92ab-86ee34ca13f5/collection/32234478-896e15e5-9c7a-4ebd-b0f6-fe0bc218d7b9?action=share&creator=32234478
+![Postman Variables](https://i.ibb.co/pWNMfC0/Screen-Shot-2024-09-08-at-11-00-21-PM.png)
+![Postman Signin](https://i.ibb.co/b5STqgV/Screen-Shot-2024-09-08-at-11-00-47-PM.png)
+
+https://www.postman.com/red-crater-997277/workspace/diaryapp/collection/32234478-23dfee9d-d8b6-4df6-aab2-b525092402a4?action=share&creator=32234478
 
 ## Getting Started
 

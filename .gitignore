@@ -109,3 +109,4 @@ yarn.lock
 # local file
 .list
 uploads/
+.DS_Store

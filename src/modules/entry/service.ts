@@ -11,24 +11,24 @@ class Entry {
     return EntryModel.create(payload);
   }
   
-  async getByUserId({ limit, page, userId }: { limit?: string, page?: string, userId: string }) {
+  async getEntryByUserId({ limit, page, userId }: { limit?: string, page?: string, userId: string }) {
     return EntryModel.find({ userId: new mongo.ObjectId(userId) }).sort({ createdAt: "desc" });
     // return EntryModel.find({ userId: new mongo.ObjectId(userId) }).limit(limit).skip(page - 1).sort({ createdAt: "desc" });
   }
   
-  async getById(id: string) {
+  async getEntryById(id: string) {
     return EntryModel.findOne({ _id: new mongo.ObjectId(id) });
   }
   
-  async countUserEntries({ userId }: { userId: string }) {
+  async countUserEntriesById({ userId }: { userId: string }) {
     return EntryModel.countDocuments({ userId: new mongo.ObjectId(userId) });
   }
   
-  async updateById(id: string, payload: Partial<IEntryPayload>) {
+  async updateEntryById(id: string, payload: Partial<IEntryPayload>) {
     return EntryModel.updateOne({ _id: new mongo.ObjectId(id) }, payload);
   }
   
-  async deleteById(id: string) {
+  async deleteEntryById(id: string) {
     return EntryModel.deleteOne({ _id: new mongo.ObjectId(id) });
   }
 }

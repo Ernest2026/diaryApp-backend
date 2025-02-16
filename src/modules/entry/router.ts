@@ -6,7 +6,7 @@ import EntryMiddleware from "./middleware";
 const router = Router()
 
 const {inspectCreateEntry, inspectGetEntry, inspectPutEntryById} = EntryMiddleware
-const {createEntry, getEntry, getEntryById, putEntryById, deleteById} = EntryController
+const {createEntry, getEntry, getEntryById, putEntryById, deleteEntryById} = EntryController
 
 router.post("/", verify, inspectCreateEntry, createEntry)
 
@@ -16,6 +16,6 @@ router.get("/:id", verify, getEntryById)
 
 router.put("/:id", verify, inspectPutEntryById, putEntryById)
 
-router.delete("/:id", verify, deleteById)
+router.delete("/:id", verify, deleteEntryById)
 
 export default router

@@ -23,7 +23,7 @@ export async function verify(req: any, res: Response, next: NextFunction) {
     throw new APIError("Invalid token", { code: StatusCodes.UNAUTHORIZED });
   }
 
-  const user = await UserService.findByEmail(verifiedAccessToken.email);
+  const user = await UserService.findUserByEmail(verifiedAccessToken.email);
 
   if (!user)
     throw new APIError(ReasonPhrases.UNAUTHORIZED, {

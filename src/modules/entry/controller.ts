@@ -46,8 +46,8 @@ class Entry {
       }
     }
   
-    const entries = await EntryService.getByUserId({ userId: res.locals.user._id.toString() })
-    // const entries = await EntryService.getByUserId({ limit, page, userId: res.locals.user._id.toString() })
+    const entries = await EntryService.getEntryByUserId({ userId: res.locals.user._id.toString() })
+    // const entries = await EntryService.getEntryByUserId({ limit, page, userId: res.locals.user._id.toString() })
   
     entries.forEach(entry => {
       const userAbilities = UserPermissions(res.locals.user)
@@ -55,7 +55,7 @@ class Entry {
         throw new APIError("You are not allowed to read this entry!", { code: StatusCodes.UNAUTHORIZED })
     })
   
-    const count = await EntryService.countUserEntries({ userId: res.locals.user._id.toString() })
+    const count = await EntryService.countUserEntriesById({ userId: res.locals.user._id.toString() })
   
     res.json({
       data: entries,
@@ -68,7 +68,7 @@ class Entry {
   }
 
   async getEntryById(req: Request, res: Response) {
-    const entry = await EntryService.getById(req.params.id)
+    const entry = await EntryService.getEntryById(req.params.id)
   
     if (!entry)
       throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
@@ -83,7 +83,7 @@ class Entry {
   async putEntryById(req: Request, res: Response) {
     const entryId = req.params.id;
 
-    const entry = await EntryService.getById(entryId)
+    const entry = await EntryService.getEntryById(entryId)
   
     if (!entry)
       throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
@@ -92,17 +92,17 @@ class Entry {
     if (!userAbilities.can('update', an("Entry", entry)))
       throw new APIError("You are not allowed to update this entry!", { code: StatusCodes.UNAUTHORIZED })
   
-    await EntryService.updateById(entryId, req.query)
+    await EntryService.updateEntryById(entryId, req.query)
   
     res.json({
       message: "Entry updated!"
     });
   }
 
-  async deleteById(req: Request, res: Response) {
+  async deleteEntryById(req: Request, res: Response) {
     const entryId = req.params.id;
   
-    const entry = await EntryService.getById(entryId)
+    const entry = await EntryService.getEntryById(entryId)
   
     if (!entry)
       throw new APIError("Entry not found!", { code: StatusCodes.NOT_FOUND })
@@ -111,7 +111,7 @@ class Entry {
     if (!userAbilities.can('delete', an("Entry", entry)))
       throw new APIError("You are not allowed to delete this entry!", { code: StatusCodes.UNAUTHORIZED })
   
-    await EntryService.deleteById(entryId)
+    await EntryService.deleteEntryById(entryId)
   
     res.json({
       message: "Entry deleted!"

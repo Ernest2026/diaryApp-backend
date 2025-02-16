@@ -32,7 +32,7 @@ class UserService {
     }
   }
 
-  async findByEmail(email: string) {
+  async findUserByEmail(email: string) {
     try {
       return await UserModel.findOne({ email });
     } catch (error: any) {

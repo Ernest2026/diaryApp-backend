@@ -16,7 +16,7 @@ router.get("/:id", verify, getEntryById)
 
 router.put("/:id", verify, inspectPutEntryById, putEntryById)
 
-router.put("/", verify, createEntries)
+router.put("/", verify, inspectCreateEntries, createEntries)
 
 router.delete("/:id", verify, deleteEntryById)
 

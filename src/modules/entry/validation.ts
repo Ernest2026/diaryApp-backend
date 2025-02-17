@@ -22,17 +22,17 @@ class EntryValidations {
     return true;
   }
 
-  async validateCreateEntries(payload: {entries: object[]}): Promise<boolean> {
-    const schema = z
-      .object({
-        title: z.string({ required_error: "Please supply a title" }),
-        mood: z
-          .string({ required_error: "Please supply a mood" }),
-        content: z.string({ required_error: "Please supply some text" }),
-      })
-      .parse(payload.entries);
-    if (!schema)
-      throw new APIError("Invalid input", { code: StatusCodes.BAD_REQUEST });
+  async validateCreateEntries(payload: { entries: object[] }): Promise<boolean> {
+    const schema = z.object({
+      title: z.string({ required_error: "Please supply a title" }),
+      mood: z.string({ required_error: "Please supply a mood" }),
+      content: z.string({ required_error: "Please supply some text" }),
+    });
+
+    for (const entry of payload.entries) {
+      schema.parse(entry);
+    }
+
     return true;
   }
 

@@ -1,26 +1,38 @@
-import { IEntryDb } from '@/types/dbmodel';
+import { EntryStatus, IEntryDb } from '@/types/dbmodel';
 import { Schema, model } from 'mongoose';
 
 const EntrySchema = new Schema<IEntryDb>(
   {
+    _id: {
+      type: Number,
+      required: true,
+      default: Date.now,
+    },
     title: {
       type: String,
-      required: [true, 'Enter title'],
+      // required: [true, 'Enter title'],
     },
-    emoji: {
+    content: {
       type: String,
-      required: [true, 'Enter emoji'],
     },
-    text: {
+    editorContent: {
       type: String,
-      required: [true, 'Enter text'],
+    },
+    mood: {
+      type: String,
+    },
+    status: {
+      type: String,
+      enum: Object.values(EntryStatus),
+      default: EntryStatus.SYNCED,
     },
     createdAt: {
       type: Date,
-      default: Date.now,
+      default: new Date(),
     },
     updatedAt: {
       type: Date,
+      default: new Date(),
       required: true
     },
     userId: {

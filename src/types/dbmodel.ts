@@ -1,6 +1,13 @@
 import { Document } from 'mongodb';
 import { Types } from 'mongoose'
 
+export enum EntryStatus {
+  DRAFT = 'draft',
+  SYNCED = 'synced',
+  EDITED_AFTER_SYNC = 'edited_after_sync',
+  DELETED = 'deleted',
+}
+
 export interface UserType extends Document {
   fullname?: string;
   email?: string;
@@ -31,19 +38,25 @@ export interface IUserPayload {
 }
 
 export interface IEntryDb {
-  _id: Types.ObjectId;
+  _id: Number;
   title: string;
-  emoji: string;
-  text: string;
+  content: string;
+  editorContent: string;
+  mood: string;
+  status: EntryStatus
   userId: Types.ObjectId;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface IEntryPayload {
+  _id?: Number;
   title: string;
-  emoji: string;
-  text: string;
+  content: string;
+  editorContent: string;
+  mood: string;
+  status: EntryStatus
+  userId?: Types.ObjectId;
+  createdAt?: Date;
   updatedAt: Date;
-  userId: string
 }

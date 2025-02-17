@@ -19,6 +19,17 @@ class Entry {
       });
     }
   }
+ 
+  async inspectCreateEntries(req: Request, res: Response, next: NextFunction) {
+    try {
+      await EntryValidation.validateCreateEntries(req.body);
+      next();
+    } catch (error: any) {
+      throw new APIError("Input not validated", {
+        code: StatusCodes.BAD_REQUEST,
+      });
+    }
+  }
   
   async inspectGetEntry(req: Request, res: Response, next: NextFunction) {
     try {

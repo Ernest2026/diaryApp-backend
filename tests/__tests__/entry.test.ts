@@ -1,8 +1,8 @@
 import { client, logger } from "../setup";
 import { StatusCodes } from "http-status-codes";
 import DBConnection from "@/utils/database";
-import { deleteGeneratedUser, generateRandomUser } from "../helpers";
-import { IUserDb } from "@/types/dbmodel";
+import { deleteGeneratedEntry, deleteGeneratedUser, generateRandomUser } from "../helpers";
+import { EntryStatus, IUserDb } from "@/types/dbmodel";
 import TokenService from "@/utils/token";
 
 export const baseUrl = "/api/v1/entries";
@@ -12,6 +12,7 @@ let token: string;
 let anotherUser: IUserDb;
 let anotherUserToken: string;
 let entryId: string;
+let secondEntryId: string;
 
 beforeAll(async () => {
   await DBConnection.mongoConnect();
@@ -25,21 +26,55 @@ beforeAll(async () => {
 afterAll(async () => {
   await deleteGeneratedUser(user.email);
   await deleteGeneratedUser(anotherUser.email);
+  await deleteGeneratedEntry(secondEntryId);
   await DBConnection.mongoDisconnect();
 });
 
 describe("POST /", () => {
-  test("that a new entry can be created by a user", async () => {
+  test("that a new entries can be created by a user", async () => {
     const res = await client
       .post(`${baseUrl}`)
       .set("Authorization", `Bearer ${token}`)
       .send({
         title: "My first entry",
-        text: "This is my first entry",
-        emoji: "👨",
+        content: "This is my first entry",
+        editorContent: "jsjsks",
+        mood: "indifferent",
+        status: "synced"
       });
     expect(res.status).toBe(StatusCodes.CREATED);
     entryId = res.body.data._id;
+  });
+});
+
+describe("PUT /", () => {
+  test("that are entries to be synced", async () => {
+    secondEntryId = Date.now().toString()
+
+    const res = await client
+      .put(`${baseUrl}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        entries: [
+          {
+            _id: entryId,
+            title: "My first edited entry",
+            content: "This is my first entry",
+            editorContent: "jsjsks",
+            mood: "indifferent",
+            status: "edited_after_sync"
+          },
+          {
+            _id: secondEntryId,
+            title: "My second entry",
+            content: "This is my first entry",
+            editorContent: "jsjsks",
+            mood: "indifferent",
+            status: "draft"
+          },
+        ]
+      });
+    expect(res.status).toBe(StatusCodes.CREATED);
   });
 });
 

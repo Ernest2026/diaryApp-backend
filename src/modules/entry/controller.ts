@@ -4,6 +4,7 @@ import { APIError } from "@/utils/error";
 import UserPermissions from "@/utils/user-permissions";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { EntryStatus, IEntryDb, IEntryPayload } from '@/types/dbmodel';
 
 class Entry {
   // constructor(parameters) {
@@ -12,13 +13,16 @@ class Entry {
 
   async createEntry(req: Request, res: Response) {
     try {
-      const { title, emoji, text } = req.body;
+      const { title, mood, content, editorContent, status } = req.body;
       const entry = await EntryService.create({
         userId: res.locals.user._id.toString(),
         updatedAt: new Date(),
+        createdAt: new Date(),
         title,
-        emoji,
-        text,
+        mood,
+        content,
+        editorContent,
+        status
       });
 
       res.status(StatusCodes.CREATED).json({
@@ -32,8 +36,42 @@ class Entry {
       });
     }
   }
+  
+  async createEntries(req: Request, res: Response) {
+    try {
+      const { entries } = req.body;
+      const userId = res.locals.user._id.toString();
+      const entriesToCreate: IEntryPayload[] = [];
+      const entriesToUpdate: IEntryPayload[] = [];
+      const entriesToDelete: IEntryPayload[] = [];
 
-  async getEntry(req:Request, res:Response) {
+      entries.forEach((entry: IEntryPayload) => {
+        const entryData = { ...entry, userId, status: EntryStatus.SYNCED };
+        if (entry.status === EntryStatus.DRAFT) {
+          entriesToCreate.push(entryData);
+        } else if (entry.status === EntryStatus.EDITED_AFTER_SYNC) {
+          entriesToUpdate.push(entryData);
+        } else if (entry.status === EntryStatus.DELETED) {
+          entriesToDelete.push(entryData);
+        }
+      });
+
+      !!entriesToCreate.length && await EntryService.createEntries(entriesToCreate);
+      !!entriesToUpdate.length && await Promise.all(entriesToUpdate.map(entry => EntryService.updateEntryById(entry._id?.toString() as string, entry)));
+      !!entriesToDelete.length && await Promise.all(entriesToDelete.map(entry => EntryService.deleteEntryById(entry._id?.toString() as string)));
+
+      res.status(StatusCodes.CREATED).json({
+        message: "Entries updated!",
+      });
+    } catch (error) {
+      res.locals.logger.debug("Error while updating entries:", error);
+      throw new APIError("Failed to update entries", {
+        code: StatusCodes.INTERNAL_SERVER_ERROR,
+      });
+    }
+  }
+
+  async getEntries(req:Request, res:Response) {
     const {limit, page} = req.query;
     const query = {
       take: limit,
@@ -46,8 +84,8 @@ class Entry {
       }
     }
   
-    const entries = await EntryService.getEntryByUserId({ userId: res.locals.user._id.toString() })
-    // const entries = await EntryService.getEntryByUserId({ limit, page, userId: res.locals.user._id.toString() })
+    const entries = await EntryService.getEntriesByUserId({ userId: res.locals.user._id.toString() })
+    // const entries = await EntryService.getEntriesByUserId({ limit, page, userId: res.locals.user._id.toString() })
   
     entries.forEach(entry => {
       const userAbilities = UserPermissions(res.locals.user)

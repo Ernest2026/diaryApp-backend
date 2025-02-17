@@ -7,17 +7,30 @@ class EntryValidations {
   // constructor(...args: (string | undefined)[]) {
   //   this.args = args;
   // }
-
+  
   async validateCreateEntry(payload: object): Promise<boolean> {
     const schema = z
       .object({
         title: z.string({ required_error: "Please supply a title" }),
-        emoji: z
-          .string({ required_error: "Please supply an emoji" })
-          .emoji("Invalid emoji"),
-        text: z.string({ required_error: "Please supply some text" }),
+        mood: z
+          .string({ required_error: "Please select mood" }),
+        content: z.string({ required_error: "Please supply some content" }),
       })
       .parse(payload);
+    if (!schema)
+      throw new APIError("Invalid input", { code: StatusCodes.BAD_REQUEST });
+    return true;
+  }
+
+  async validateCreateEntries(payload: {entries: object[]}): Promise<boolean> {
+    const schema = z
+      .object({
+        title: z.string({ required_error: "Please supply a title" }),
+        mood: z
+          .string({ required_error: "Please supply a mood" }),
+        content: z.string({ required_error: "Please supply some text" }),
+      })
+      .parse(payload.entries);
     if (!schema)
       throw new APIError("Invalid input", { code: StatusCodes.BAD_REQUEST });
     return true;
@@ -38,7 +51,7 @@ class EntryValidations {
   async validatePutEntryById(payload: object): Promise<boolean> {
     const schema = z.object({
       title: z.string(),
-      emoji: z.string().emoji(),
+      mood: z.string().emoji(),
       text: z.string()
     }).partial().parse(payload);
     if (!schema)

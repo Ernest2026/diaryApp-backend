@@ -1,6 +1,7 @@
 import { UserType } from "@/types/dbmodel";
 import { chance } from "./setup"
 import UserService from "@/modules/user/service"
+import EntryService from "@/modules/entry/service"
 
 export async function generateRandomUser() {
   return UserService.create({
@@ -13,4 +14,8 @@ export async function generateRandomUser() {
 
 export async function deleteGeneratedUser(email: string) {
   return UserService.deleteUser({email});
+}
+
+export async function deleteGeneratedEntry(id: string) {
+  return EntryService.deleteEntryById(id);
 }

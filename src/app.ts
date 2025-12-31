@@ -1,7 +1,7 @@
 import "express-async-errors";
 
-import config from "@/config";
-import logger from "@/utils/logger";
+import config from "./config";
+import logger from "./utils/logger";
 import cors from "cors";
 import express, { Express } from "express";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";

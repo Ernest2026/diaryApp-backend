@@ -1,4 +1,4 @@
-import { APIError } from "@/utils/error";
+import { APIError } from "../../utils/error";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import AuthValidations from "./validation";

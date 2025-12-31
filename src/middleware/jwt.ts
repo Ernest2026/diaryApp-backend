@@ -1,7 +1,7 @@
-// import { prisma } from "@/utils/database_"
-import UserService from "@/modules/user/service";
-import { APIError } from "@/utils/error";
-import TokenService from "@/utils/token";
+// import { prisma } from "../utils/database_"
+import UserService from "../modules/user/service";
+import { APIError } from "../utils/error";
+import TokenService from "../utils/token";
 import { NextFunction, Response } from "express";
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 

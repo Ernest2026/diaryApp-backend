@@ -1,10 +1,10 @@
 import { subject as an } from '@casl/ability'
-import EntryService from "@/modules/entry/service";
-import { APIError } from "@/utils/error";
-import UserPermissions from "@/utils/user-permissions";
+import EntryService from "../../modules/entry/service";
+import { APIError } from "../../utils/error";
+import UserPermissions from "../../utils/user-permissions";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { EntryStatus, IEntryDb, IEntryPayload } from '@/types/dbmodel';
+import { EntryStatus, IEntryDb, IEntryPayload } from '../../types/dbmodel';
 
 class Entry {
   // constructor(parameters) {

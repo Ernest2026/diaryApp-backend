@@ -1,4 +1,4 @@
-import { verify } from "@/middleware/jwt";
+import { verify } from "../../middleware/jwt";
 import { Router } from "express";
 import EntryController from './controller';
 import EntryMiddleware from "./middleware";

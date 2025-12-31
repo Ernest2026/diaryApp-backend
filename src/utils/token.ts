@@ -1,4 +1,4 @@
-import config from "@/config";
+import config from "../config";
 import * as jwt from "jsonwebtoken";
 
 export type Token = {

@@ -1,5 +1,5 @@
 import { defineAbility } from '@casl/ability'
-import { IUserDb } from '@/types/dbmodel'
+import { IUserDb } from '../types/dbmodel'
 
 type Actions = 'read' | 'update' | 'delete'
 type Subjects = 'Entry' | 'Settings'

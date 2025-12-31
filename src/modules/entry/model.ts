@@ -6,11 +6,10 @@ const EntrySchema = new Schema<IEntryDb>(
     _id: {
       type: Number,
       required: true,
-      default: Date.now,
+      default: () => Date.now(), // explicit, safer
     },
     title: {
       type: String,
-      // required: [true, 'Enter title'],
     },
     content: {
       type: String,
@@ -28,25 +27,27 @@ const EntrySchema = new Schema<IEntryDb>(
     },
     createdAt: {
       type: Date,
-      default: new Date(),
+      default: () => new Date(),
     },
     updatedAt: {
       type: Date,
-      default: new Date(),
-      required: true
+      default: () => new Date(),
+      required: true,
     },
     userId: {
       type: Schema.Types.ObjectId,
+      required: true,
     },
   },
   {
+    versionKey: false, // 👈 removes __v cleanly
     toJSON: {
-      transform: function(doc, ret) {
-        delete ret.password;
-        delete ret.__v;
+      transform(_, ret) {
+        return ret; // 👈 no deletes needed
       },
     },
-  });
+  }
+);
 
-const EntryModel = model('Entry', EntrySchema);
-export default EntryModel
+const EntryModel = model<IEntryDb>('Entry', EntrySchema);
+export default EntryModel;

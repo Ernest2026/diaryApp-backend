@@ -1,5 +1,5 @@
-import { APIError } from "@/utils/error"
-import AppLogger from "@/utils/logger"
+import { APIError } from "../utils/error"
+import AppLogger from "../utils/logger"
 import { NextFunction, Request, Response } from "express"
 import { ReasonPhrases, StatusCodes } from "http-status-codes"
 import { z, ZodError } from "zod"

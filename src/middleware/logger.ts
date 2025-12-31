@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import AppLogger from "@/utils/logger"
+import AppLogger from "../utils/logger"
 
 const logger = AppLogger.getSubLogger({ name: "LoggerMiddleware" })
 

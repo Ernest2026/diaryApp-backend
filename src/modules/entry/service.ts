@@ -1,5 +1,5 @@
-import EntryModel from "@/modules/entry/model";
-import { EntryStatus, IEntryPayload } from "@/types/dbmodel";
+import EntryModel from "../../modules/entry/model";
+import { EntryStatus, IEntryPayload } from "../../types/dbmodel";
 import { mongo } from "mongoose";
 
 class Entry {
@@ -32,9 +32,9 @@ class Entry {
     return EntryModel.updateOne({ _id: +id }, payload);
   }
 
-  async updateEntries(payload: IEntryPayload[]) {
-    return EntryModel.updateMany(payload);
-  }
+  // async updateEntries(payload: IEntryPayload[]) {
+  //   return EntryModel.updateMany(payload);
+  // }
   
   async deleteEntryById(id: string) {
     return EntryModel.deleteOne({ _id: +id });

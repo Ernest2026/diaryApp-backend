@@ -1,4 +1,4 @@
-import { APIError } from "@/utils/error";
+import { APIError } from "../../utils/error";
 import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 

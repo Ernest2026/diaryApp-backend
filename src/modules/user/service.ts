@@ -1,7 +1,7 @@
-import { UserType } from "@/types/dbmodel";
-import { APIError } from "@/utils/error";
+import { UserType } from "../../types/dbmodel";
+import { APIError } from "../../utils/error";
 import { StatusCodes } from "http-status-codes";
-import UserModel from "@/modules/user/model";
+import UserModel from "../../modules/user/model";
 
 class UserService {
   // constructor(parameters) {

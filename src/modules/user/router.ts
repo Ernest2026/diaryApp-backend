@@ -2,7 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import UserController from "./controller";
 import path from "path";
-import { verify } from "@/middleware/jwt";
+import { verify } from "../../middleware/jwt";
 
 
 const storage = multer.diskStorage({

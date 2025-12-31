@@ -6,48 +6,42 @@ const UserSchema = new Schema<IUserDb>(
     fullname: {
       type: String,
       required: [true, 'Enter fullname'],
-      min: 3,
-      max: 50,
+      minlength: 3,
+      maxlength: 50,
     },
     email: {
       type: String,
       required: [true, 'Enter your email'],
-      max: 50,
+      maxlength: 50,
       unique: true,
     },
     password: {
       type: String,
       required: [true, 'Enter your password'],
-      min: 5,
-      max: 200,
+      minlength: 5,
+      maxlength: 200,
+      select: false, // 👈 key fix
     },
     imageUrl: {
       type: String,
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      required: true
     },
     entriesId: {
       type: Schema.Types.ObjectId,
     },
     settingId: {
-      type: Schema.Types.ObjectId
-    }
+      type: Schema.Types.ObjectId,
+    },
   },
   {
+    timestamps: true,      // 👈 handles createdAt + updatedAt correctly
+    versionKey: false,     // 👈 removes __v safely
     toJSON: {
-      transform: function(doc, ret) {
-        delete ret.password;
-        delete ret.__v;
+      transform(_, ret) {
+        return ret;         // 👈 no deletes, no TS issues
       },
     },
   }
 );
 
 const UserModel = model<IUserDb>('User', UserSchema);
-export default UserModel
+export default UserModel;

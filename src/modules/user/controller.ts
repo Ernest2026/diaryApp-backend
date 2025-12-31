@@ -1,8 +1,8 @@
-import GlobalLogger from "@/utils/logger";
+import GlobalLogger from "../../utils/logger";
 import { Request, Response } from "express";
 import UserService from "./service";
-import config from "@/config";
-import { APIError } from "@/utils/error";
+import config from "../../config";
+import { APIError } from "../../utils/error";
 import { StatusCodes } from "http-status-codes";
 import fs from 'fs'
 import path from 'path'

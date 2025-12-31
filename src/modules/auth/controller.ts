@@ -47,7 +47,7 @@ class Auth {
     try {
       const { email, password } = req.body;
       const data = await UserService.findUserByEmail(email);
-      if (!data || !data.password) {
+      if (!data) {
         throw new APIError("Email doesn't exist", {
           code: StatusCodes.EXPECTATION_FAILED,
         });

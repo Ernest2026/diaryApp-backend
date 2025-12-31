@@ -20,7 +20,7 @@ const UserSchema = new Schema<IUserDb>(
       required: [true, 'Enter your password'],
       minlength: 5,
       maxlength: 200,
-      select: false, // 👈 key fix
+      // select: false, // 👈 key fix
     },
     imageUrl: {
       type: String,

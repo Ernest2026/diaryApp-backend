@@ -1,4 +1,4 @@
-import { EntryStatus, IEntryDb } from '@/types/dbmodel';
+import { EntryStatus, IEntryDb } from '../../types/dbmodel';
 import { Schema, model } from 'mongoose';
 
 const EntrySchema = new Schema<IEntryDb>(

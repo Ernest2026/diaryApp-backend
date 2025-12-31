@@ -1,4 +1,4 @@
-import { IUserDb } from '@/types/dbmodel';
+import { IUserDb } from '../../types/dbmodel';
 import { Schema, model } from 'mongoose';
 
 const UserSchema = new Schema<IUserDb>(
